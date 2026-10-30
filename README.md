@@ -2,8 +2,10 @@
 
 Accident statistics and area monitoring for Algeria.
 
-The interface uses solid neutral surfaces and a restrained aqua accent. Shared
-tokens live in `vite-version/src/styles/tokens.css`, with map styles in
+The interface follows the purple palette, Gabarito type, and rounded controls in
+[the design system](docs/design.md). Most surfaces are solid; a faint canvas
+gradient and translucent floating controls provide limited depth. Shared tokens
+live in `vite-version/src/styles/tokens.css`, with map styles in
 `vite-version/src/styles/leaflet-theme.css`.
 
 ## Run locally
@@ -25,8 +27,13 @@ Open [localhost:5173](http://localhost:5173).
 - **Accident map** (`/map`): Leaflet map with severity markers and selectable
   accident locations.
 
-Both pages share filters for app usage, online/offline alerts, area, severity,
-date range, and record search. Filters are preserved in the URL.
+Statistics has one search field directly above the report table. Click a column
+heading to toggle alphabetical, numeric, date, or category order across all
+matching reports. Search accepts names, phone numbers, and record or vehicle IDs.
+Exports follow the selected order.
+
+The map keeps its app usage, connectivity, area, severity, and date filters.
+Search and map filters are preserved in the URL.
 
 ## Data
 

@@ -1,31 +1,81 @@
 import { test, expect } from "@playwright/test"
 
-test("statistics, independent filters, search, details, pagination and CSV export", async ({
+test("statistics headers sort every report and exports follow the selected order", async ({
   page,
 }) => {
+  test.setTimeout(60000)
   const errors: string[] = []
   page.on("pageerror", (error) => errors.push(error.message))
   await page.goto("/")
   await expect(
     page.getByRole("heading", { name: "Statistics overview" })
-  ).toBeVisible()
+  ).toBeVisible({ timeout: 15000 })
+  await expect(
+    page.getByRole("region", { name: "Accident filters" })
+  ).toHaveCount(0)
+  await expect(page.getByRole("searchbox")).toHaveCount(1)
   await expect(page.getByTestId("Total accidents")).toHaveText("48")
-  await page.getByRole("button", { name: "Next page", exact: true }).click()
-  await expect(page.getByText("Page 2 of 6")).toBeVisible()
-  await page.getByLabel("App usage", { exact: true }).selectOption("app")
-  await expect(page.getByTestId("Total accidents")).toHaveText("32")
-  await page
-    .getByLabel("Alert connectivity", { exact: true })
-    .selectOption("offline")
-  await expect(page.getByTestId("Total accidents")).toHaveText("16")
-  await expect(page.getByTestId("Online alerts")).toHaveText("0")
-  await page
-    .getByRole("button", { name: "View details for ACC-2026-003" })
-    .click()
-  await expect(page.getByRole("dialog")).toContainText("DEMO-NID-100003")
-  await expect(page.getByRole("dialog")).toContainText("DEMO-REG-200003")
-  await expect(page.getByRole("dialog")).toContainText("+213 555 000 003")
-  await page.getByRole("button", { name: "Close", exact: true }).click()
+  const rows = page.locator("tbody tr")
+  const firstCell = (index: number) => rows.first().locator("td").nth(index)
+  const header = (name: string) =>
+    page.getByRole("button", { name, exact: true })
+
+  await header("App usage").click()
+  await expect(
+    page.getByRole("columnheader", { name: "App usage" })
+  ).toHaveAttribute("aria-sort", "ascending")
+  await expect(firstCell(6)).toHaveText("Uses app")
+  expect(await rows.locator("td:nth-child(7)").allTextContents()).toEqual(
+    Array(8).fill("Uses app")
+  )
+  for (let index = 0; index < 4; index++) {
+    await page.getByRole("button", { name: "Next page", exact: true }).click()
+    await expect(page.getByText("Page " + (index + 2) + " of 6")).toBeVisible()
+  }
+  await expect(firstCell(6)).toHaveText("No app")
+  await header("App usage").click()
+  await expect(
+    page.getByRole("columnheader", { name: "App usage" })
+  ).toHaveAttribute("aria-sort", "descending")
+  await expect(page.getByText("Page 1 of 6")).toBeVisible()
+  expect(await rows.locator("td:nth-child(7)").allTextContents()).toEqual(
+    Array(8).fill("No app")
+  )
+  await expect(page.getByTestId("Total accidents")).toHaveText("48")
+
+  await header("Alert").click()
+  await expect(firstCell(7)).toHaveText("Online")
+  await header("Alert").click()
+  await expect(firstCell(7)).toHaveText("Offline")
+  await header("Severity").click()
+  await expect(firstCell(8)).toHaveText("Minor")
+  await header("Severity").click()
+  await expect(firstCell(8)).toHaveText("Severe")
+  await header("Driver").click()
+  await expect(firstCell(1)).toHaveText("Amine Benali")
+  await header("Driver").click()
+  await expect(firstCell(1)).toHaveText("Yasmine Mansouri")
+  await header("Identity card").click()
+  await expect(firstCell(3)).toHaveText("DEMO-NID-100001")
+  await header("Identity card").click()
+  await expect(firstCell(3)).toHaveText("DEMO-NID-100048")
+  await header("Vehicle card").click()
+  await expect(firstCell(4)).toHaveText("DEMO-REG-200001")
+  await header("Vehicle card").click()
+  await expect(firstCell(4)).toHaveText("DEMO-REG-200048")
+  await header("License plate").click()
+  await expect(firstCell(5)).toContainText("10000")
+  await header("License plate").click()
+  await expect(firstCell(5)).toContainText("10611")
+  await header("Report / date").click()
+  await expect(firstCell(0)).toContainText("ACC-2026-048")
+  await header("Report / date").click()
+  await expect(firstCell(0)).toContainText("ACC-2026-002")
+  await header("Phone").click()
+  await expect(firstCell(2)).toHaveText("+213 555 000 001")
+  await header("Phone").click()
+  await expect(firstCell(2)).toHaveText("+213 555 000 048")
+
   const downloadEvent = page.waitForEvent("download")
   await page.getByRole("button", { name: "Export reports" }).click()
   const download = await downloadEvent
@@ -33,70 +83,104 @@ test("statistics, independent filters, search, details, pagination and CSV expor
   const stream = await download.createReadStream()
   let csv = ""
   for await (const chunk of stream!) csv += chunk.toString()
-  expect(csv.trim().split("\r\n")).toHaveLength(17)
-  expect(csv).toContain("vehicleCard")
-  await page.getByLabel("App usage", { exact: true }).selectOption("no-app")
+  expect(csv.trim().split("\r\n")).toHaveLength(49)
+  expect(csv.split("\r\n")[1]).toContain("ACC-2026-048")
+
+  expect(errors).toEqual([])
+})
+
+test("statistics table search supports names, phone digits, IDs and pagination reset", async ({
+  page,
+}) => {
+  test.setTimeout(60000)
+  const errors: string[] = []
+  page.on("pageerror", (error) => errors.push(error.message))
+  await page.goto("/statistics")
+  await expect(
+    page.getByRole("heading", { name: "Statistics overview" })
+  ).toBeVisible({ timeout: 15000 })
+  const rows = page.locator("tbody tr")
+  const firstCell = (index: number) => rows.first().locator("td").nth(index)
+  const header = (name: string) =>
+    page.getByRole("button", { name, exact: true })
+  await header("Phone").click()
+  await header("Phone").click()
+  await expect(
+    page.getByRole("columnheader", { name: "Phone" })
+  ).toHaveAttribute("aria-sort", "descending")
+  const search = page.getByRole("searchbox", { name: "Search records" })
+  await search.fill("Karim")
+  await expect(rows).toHaveCount(4)
+  await expect(firstCell(1)).toHaveText("Karim Haddad")
+  await expect(
+    page.getByRole("columnheader", { name: "Phone" })
+  ).toHaveAttribute("aria-sort", "descending")
+  await search.fill("555000003")
+  await expect(rows).toHaveCount(1)
+  await expect(firstCell(2)).toHaveText("+213 555 000 003")
+  await search.fill("demo-nid-100003")
+  await expect(rows).toHaveCount(1)
+  await search.fill("DEMO-REG-200003")
+  await expect(page).toHaveURL(/q=DEMO-REG-200003/)
+  await expect(firstCell(4)).toHaveText("DEMO-REG-200003")
   await page
-    .getByLabel("Alert connectivity", { exact: true })
-    .selectOption("online")
-  await expect(page).toHaveURL(/channel=online/)
-  await expect(page.getByTestId("Total accidents")).toHaveText("8")
-  await page.getByLabel("Severity", { exact: true }).selectOption("Severe")
-  await expect(page.getByTestId("Total accidents")).toHaveText("1")
-  await page.getByLabel("Sample period", { exact: true }).selectOption("7")
-  await expect(page).toHaveURL(/days=7/)
-  await expect(page.getByTestId("Total accidents")).toHaveText("0")
-  await page.getByRole("button", { name: "Clear filters" }).click()
-  await page
-    .getByRole("searchbox", { name: "Search records" })
-    .fill("missing-record")
+    .getByRole("button", { name: "View details for ACC-2026-003" })
+    .click()
+  await expect(page.getByRole("dialog")).toContainText("DEMO-NID-100003")
+  await expect(page.getByRole("dialog")).toContainText("DEMO-REG-200003")
+  await page.getByRole("button", { name: "Close", exact: true }).click()
+
+  await search.fill("all")
+  await expect(search).toHaveValue("all")
+  await expect(page).toHaveURL(/q=all/)
+  await search.fill("missing-record")
   await expect(page.getByText("No matching reports")).toBeVisible()
-  await expect(page.getByTestId("Total accidents")).toHaveText("0")
   await expect(
     page.getByRole("button", { name: "Export reports" })
   ).toBeDisabled()
-  await page.getByRole("button", { name: "Clear filters" }).click()
-  await page
-    .getByRole("searchbox", { name: "Search records" })
-    .fill("DEMO-REG-200003")
-  await expect(page.getByTestId("Total accidents")).toHaveText("1")
-  await page.getByRole("button", { name: "Clear filters" }).click()
+  await page.getByRole("button", { name: "Clear search" }).click()
+  await expect(rows).toHaveCount(8)
   await expect(page.getByTestId("Total accidents")).toHaveText("48")
+  await page.getByRole("button", { name: "Next page", exact: true }).click()
+  await expect(page.getByText("Page 2 of 6")).toBeVisible()
+  await search.pressSequentially("Amine", { delay: 40 })
+  await expect(search).toHaveValue("Amine")
+  await expect(rows).toHaveCount(4)
+  await expect(page.getByText("Page 1 of 1")).toBeVisible()
+  await page.getByRole("button", { name: "Clear search" }).click()
+  await header("Driver").click()
+  await expect(firstCell(1)).toHaveText("Amine Benali")
   await page.screenshot({ path: ".tmp/statistics-desktop.png", fullPage: true })
   expect(errors).toEqual([])
 })
 
-test("design tokens, map tiles, and both appearances work", async ({
-  page,
-}) => {
-  const failures: string[] = []
-  page.on("requestfailed", (request) => {
-    if (request.url().includes("tile.openstreetmap.org"))
-      failures.push(request.failure()?.errorText ?? request.url())
-  })
+test("map styling, Gabarito and both appearances work", async ({ page }) => {
+  // Appearance checks use a local tile fixture instead of depending on OSM availability.
+  await page.route("https://tile.openstreetmap.org/**", (route) =>
+    route.fulfill({
+      contentType: "image/svg+xml",
+      body: '<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256"><rect width="256" height="256" fill="#f5f5f5"/></svg>',
+    })
+  )
   await page.goto("/map")
-  await expect(page.locator("html")).toHaveClass(/dark/)
+  await expect(page.locator("html")).toHaveClass(/light/)
   await expect(page.locator(".leaflet-marker-icon")).toHaveCount(48)
   await expect
-    .poll(() => page.locator(".leaflet-tile-loaded").count(), {
-      timeout: 20000,
-      message: "OpenStreetMap tile loading: " + failures.join(", "),
-    })
+    .poll(() => page.locator(".leaflet-tile-loaded").count())
     .toBeGreaterThan(0)
-  await page.screenshot({ path: ".tmp/map-loaded.png", fullPage: true })
-  await expect(page.locator(".leaflet-tile-pane")).toHaveCSS("filter", /invert/)
-  await expect(page.locator(".leaflet-control-zoom-in")).toHaveCSS(
-    "height",
-    "44px"
-  )
-  await page.getByRole("button", { name: "Switch to light mode" }).click()
-  await expect(page.locator("html")).toHaveClass(/light/)
   await expect(page.locator(".leaflet-tile-pane")).not.toHaveCSS(
     "filter",
     /invert/
   )
+  await expect(page.locator(".leaflet-control-zoom-in")).toHaveCSS(
+    "height",
+    "44px"
+  )
   await page.getByRole("button", { name: "Switch to dark mode" }).click()
   await expect(page.locator("html")).toHaveClass(/dark/)
+  await expect(page.locator(".leaflet-tile-pane")).toHaveCSS("filter", /invert/)
+  await page.getByRole("button", { name: "Switch to light mode" }).click()
+  await expect(page.locator("html")).toHaveClass(/light/)
   await page
     .getByRole("link", { name: "Statistics overview", exact: true })
     .click()
@@ -104,12 +188,12 @@ test("design tokens, map tiles, and both appearances work", async ({
   await page.evaluate(() => document.fonts.ready)
   await expect(
     page.getByRole("heading", { name: "Statistics overview" })
-  ).toHaveCSS("font-family", /Plus Jakarta Sans/)
+  ).toHaveCSS("font-family", /Gabarito/)
   await expect(page.getByRole("button", { name: "Export reports" })).toHaveCSS(
     "height",
-    "52px"
+    "40px"
   )
-  await page.screenshot({ path: ".tmp/statistics-dark.png", fullPage: true })
+  await page.screenshot({ path: ".tmp/statistics-light.png", fullPage: true })
 })
 
 test("map navigation preserves filters, selects records, and renders Leaflet markers", async ({
@@ -117,22 +201,30 @@ test("map navigation preserves filters, selects records, and renders Leaflet mar
 }) => {
   const errors: string[] = []
   page.on("pageerror", (error) => errors.push(error.message))
-  await page.goto("/statistics?source=app&channel=offline")
+  await page.goto("/statistics?q=ACC-2026-003")
   await page.getByRole("link", { name: "View ACC-2026-003 on map" }).click()
   await expect(
     page.getByRole("heading", { name: "Accident map", exact: true })
   ).toBeVisible()
-  await expect(page.getByLabel("App usage", { exact: true })).toHaveValue("app")
+  await expect(page.getByLabel("App usage", { exact: true })).toHaveValue("all")
   await expect(
     page.getByLabel("Alert connectivity", { exact: true })
-  ).toHaveValue("offline")
-  await expect(page.locator(".leaflet-marker-icon")).toHaveCount(16)
+  ).toHaveValue("all")
+  await expect(page.locator(".leaflet-marker-icon")).toHaveCount(1)
   await expect(page.locator(".leaflet-popup")).toContainText("ACC-2026-003")
   await expect(page.locator(".accident-marker.is-selected")).toHaveCount(1)
   await expect(page.getByText("Selected report", { exact: true })).toBeVisible()
   await page.getByRole("button", { name: "Details", exact: true }).click()
   await expect(page.getByRole("dialog")).toContainText("Karim Haddad")
   await page.getByRole("button", { name: "Close", exact: true }).click()
+  await page.getByRole("button", { name: "Clear filters" }).click()
+  await expect(page.locator(".leaflet-marker-icon")).toHaveCount(48)
+  await page.getByLabel("App usage", { exact: true }).selectOption("app")
+  await expect(page.locator(".leaflet-marker-icon")).toHaveCount(32)
+  await page
+    .getByLabel("Alert connectivity", { exact: true })
+    .selectOption("offline")
+  await expect(page.locator(".leaflet-marker-icon")).toHaveCount(16)
   await page.getByRole("button", { name: "Clear filters" }).click()
   await expect(page.locator(".leaflet-marker-icon")).toHaveCount(48)
   await page.getByLabel("Area", { exact: true }).selectOption("Algiers")

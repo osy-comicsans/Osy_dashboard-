@@ -121,11 +121,12 @@
 }
 .map-legend,
 .map-notice {
-  border: 1px solid var(--input);
+  border: 1px solid var(--border);
   border-radius: var(--shape-sm);
-  background: var(--surface-overlay);
+  background: var(--floating-fill);
   color: var(--foreground);
-  box-shadow: none;
+  backdrop-filter: blur(8px);
+  box-shadow: var(--shadow-sm);
 }
 .map-legend {
   padding: var(--space-sm) var(--space-md);

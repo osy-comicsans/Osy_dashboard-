@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react"
 import {
   CarFront,
   Download,
@@ -10,14 +11,35 @@ import {
 import { Link } from "react-router-dom"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { AccidentFilters } from "@/features/accidents/filters"
 import { AccidentCharts } from "@/features/accidents/charts"
 import { RecordsTable } from "@/features/accidents/records-table"
 import { useAccidents } from "@/features/accidents/use-accidents"
 import { exportAccidents } from "@/features/accidents/export"
+import {
+  sortAccidents,
+  type AccidentSort,
+  type AccidentSortKey,
+} from "@/features/accidents/sort-accidents"
 
 export default function StatisticsPage() {
-  const { records, days, mapLink, active } = useAccidents()
+  const { records, days, mapLink, active, query, update } = useAccidents({
+    filters: false,
+  })
+  const [sort, setSort] = useState<AccidentSort>({
+    key: "occurredAt",
+    direction: "desc",
+  })
+  const sortedRecords = useMemo(
+    () => sortAccidents(records, sort),
+    [records, sort]
+  )
+  function changeSort(key: AccidentSortKey) {
+    setSort((current) => ({
+      key,
+      direction:
+        current.key === key && current.direction === "asc" ? "desc" : "asc",
+    }))
+  }
   const metrics = [
     {
       label: "Total accidents",
@@ -50,15 +72,14 @@ export default function StatisticsPage() {
     <>
       <div className="page-intro">
         <div>
-          <p className="page-eyebrow">Road safety intelligence</p>
           <h1 className="page-heading">Statistics overview</h1>
           <p className="page-description">
-            Understand accidents, the people involved, and how alerts reach you.
+            Accident reports and alerts across Algeria.
           </p>
         </div>
         <div className="page-actions flex gap-3">
           <Link
-            className={buttonVariants({ variant: "outline", size: "lg" })}
+            className={buttonVariants({ variant: "outline" })}
             to={mapLink()}
           >
             <Map />
@@ -67,14 +88,13 @@ export default function StatisticsPage() {
           </Link>
           <Button
             disabled={!records.length}
-            onClick={() => exportAccidents(records)}
+            onClick={() => exportAccidents(sortedRecords)}
           >
             <Download />
             Export reports
           </Button>
         </div>
       </div>
-      <AccidentFilters />
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {metrics.map((metric) => (
           <Card key={metric.label} className="metric-card">
@@ -102,9 +122,12 @@ export default function StatisticsPage() {
       </div>
       <AccidentCharts records={records} days={days} />
       <RecordsTable
-        key={records.map((r) => r.id).join(",")}
-        records={records}
+        records={sortedRecords}
         mapLink={mapLink}
+        query={query}
+        onQueryChange={(value) => update("q", value)}
+        sort={sort}
+        onSort={changeSort}
       />
       <p className="text-[10px] leading-relaxed text-muted-foreground">
         Sample data for Algeria · October 2026. All people, identity numbers,

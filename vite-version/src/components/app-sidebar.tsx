@@ -55,7 +55,7 @@ export function AppSidebar(props: ComponentProps<typeof Sidebar>) {
                     />
                   }
                 >
-                  <item.icon />
+                  <item.icon className="size-5" />
                   <span>{item.title}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>

@@ -43,15 +43,13 @@ export default function MapPage() {
     <>
       <div className="page-intro">
         <div>
-          <p className="page-eyebrow">Geographic insights</p>
           <h1 className="page-heading">Accident map</h1>
           <p className="page-description">
-            Explore accident locations across Algeria. Select a report to see
-            where it happened.
+            Accident locations across Algeria. Select a report to inspect it.
           </p>
         </div>
         <Link
-          className={buttonVariants({ variant: "outline", size: "lg" })}
+          className={buttonVariants({ variant: "outline" })}
           to={
             "/statistics" +
             (statisticsParams.size ? "?" + statisticsParams.toString() : "")

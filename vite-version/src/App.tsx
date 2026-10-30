@@ -24,7 +24,7 @@ function App() {
       className="font-sans antialiased"
       style={{ fontFamily: "var(--font-family)" }}
     >
-      <ThemeProvider defaultTheme="dark" storageKey="roadwatch-theme">
+      <ThemeProvider defaultTheme="light" storageKey="roadwatch-theme">
         <Toaster>
           <RouterProvider router={router} />
         </Toaster>

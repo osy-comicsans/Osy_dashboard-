@@ -1,5 +1,16 @@
 import { useState } from "react"
-import { ChevronLeft, ChevronRight, Eye, MapPin, SearchX } from "lucide-react"
+import {
+  ArrowDown,
+  ArrowUp,
+  ArrowUpDown,
+  ChevronLeft,
+  ChevronRight,
+  Eye,
+  MapPin,
+  Search,
+  SearchX,
+  X,
+} from "lucide-react"
 import { Link } from "react-router-dom"
 import { Button, buttonVariants } from "@/components/ui/button"
 import {
@@ -11,18 +22,45 @@ import {
 import { ChannelBadge, SeverityBadge, SourceBadge } from "./badges"
 import { dateLabel, type Accident } from "./data"
 import { RecordDetails } from "./record-details"
+import {
+  sortDescription,
+  type AccidentSort,
+  type AccidentSortKey,
+} from "./sort-accidents"
+
+const columns: { key: AccidentSortKey; label: string }[] = [
+  { key: "occurredAt", label: "Report / date" },
+  { key: "name", label: "Driver" },
+  { key: "phone", label: "Phone" },
+  { key: "identityCard", label: "Identity card" },
+  { key: "vehicleCard", label: "Vehicle card" },
+  { key: "plate", label: "License plate" },
+  { key: "source", label: "App usage" },
+  { key: "channel", label: "Alert" },
+  { key: "severity", label: "Severity" },
+]
 
 export function RecordsTable({
   records,
   mapLink,
+  query,
+  onQueryChange,
+  sort,
+  onSort,
 }: {
   records: Accident[]
   mapLink: (id: string) => string
+  query: string
+  onQueryChange: (value: string) => void
+  sort: AccidentSort
+  onSort: (key: AccidentSortKey) => void
 }) {
-  const [page, setPage] = useState(1)
+  const [pagination, setPagination] = useState({ page: 1, context: "" })
+  const context = [query, sort.key, sort.direction].join("|")
   const [selected, setSelected] = useState<Accident | null>(null)
   const pageCount = Math.max(1, Math.ceil(records.length / 8))
-  const currentPage = Math.min(page, pageCount)
+  const currentPage =
+    pagination.context === context ? Math.min(pagination.page, pageCount) : 1
   const start = (currentPage - 1) * 8
   return (
     <>
@@ -37,35 +75,83 @@ export function RecordsTable({
                 </span>
               </CardTitle>
               <CardDescription className="mt-1">
-                Driver, vehicle, and alert information for every report
+                Click a column heading to sort; click again to reverse.
               </CardDescription>
             </div>
             <span className="text-xs text-muted-foreground">
-              Newest first · Algeria time
+              {sortDescription(sort)} · Algeria time
             </span>
+          </div>
+          <div className="records-search relative mt-4 w-full sm:max-w-md">
+            <label htmlFor="report-search" className="sr-only">
+              Search records
+            </label>
+            <Search className="pointer-events-none absolute top-3.5 left-3.5 size-4 text-muted-foreground" />
+            <input
+              id="report-search"
+              type="search"
+              value={query}
+              onChange={(event) => onQueryChange(event.target.value)}
+              placeholder="Search by name, phone, or ID…"
+              className="filter-control w-full"
+            />
+            {query && (
+              <button
+                type="button"
+                aria-label="Clear search"
+                onClick={() => onQueryChange("")}
+                className="absolute top-1 right-1 flex size-9 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"
+              >
+                <X className="size-4" />
+              </button>
+            )}
           </div>
         </CardHeader>
         <div className="overflow-x-auto">
           <table className="records-table w-full text-left text-sm">
             <thead className="border-y bg-muted/35 text-xs text-muted-foreground">
               <tr>
-                {[
-                  "Report / date",
-                  "Driver",
-                  "Identity / vehicle card",
-                  "Vehicle",
-                  "App usage",
-                  "Alert",
-                  "Severity",
-                  "Actions",
-                ].map((label) => (
-                  <th
-                    key={label}
-                    className="px-4 py-3 font-medium whitespace-nowrap"
-                  >
-                    {label}
-                  </th>
-                ))}
+                {columns.map((column) => {
+                  const active = sort.key === column.key
+                  const Icon = active
+                    ? sort.direction === "asc"
+                      ? ArrowUp
+                      : ArrowDown
+                    : ArrowUpDown
+                  return (
+                    <th
+                      key={column.key}
+                      scope="col"
+                      aria-sort={
+                        active
+                          ? sort.direction === "asc"
+                            ? "ascending"
+                            : "descending"
+                          : undefined
+                      }
+                      className="px-4 py-2 font-medium whitespace-nowrap"
+                    >
+                      <button
+                        type="button"
+                        className="table-sort-button"
+                        onClick={() => onSort(column.key)}
+                        title={
+                          "Sort by " +
+                          column.label +
+                          (active && sort.direction === "asc"
+                            ? " descending"
+                            : " ascending")
+                        }
+                      >
+                        {column.label}
+                        <Icon className="size-3.5" aria-hidden="true" />
+                      </button>
+                    </th>
+                  )
+                })}
+                <th scope="col" className="px-4 py-3 font-medium">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -90,15 +176,15 @@ export function RecordsTable({
                     >
                       {record.name}
                     </button>
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      {record.phone}
-                    </p>
+                  </td>
+                  <td className="px-4 py-4 whitespace-nowrap tabular-nums">
+                    {record.phone}
                   </td>
                   <td className="px-4 py-4 text-[11px] whitespace-nowrap tabular-nums">
                     <p>{record.identityCard}</p>
-                    <p className="mt-1.5 text-muted-foreground">
-                      {record.vehicleCard}
-                    </p>
+                  </td>
+                  <td className="px-4 py-4 text-[11px] whitespace-nowrap tabular-nums">
+                    {record.vehicleCard}
                   </td>
                   <td className="px-4 py-4 whitespace-nowrap">
                     <p className="font-medium">{record.plate}</p>
@@ -146,7 +232,7 @@ export function RecordsTable({
               <SearchX className="mb-1 size-8 text-muted-foreground" />
               <p className="font-medium">No matching reports</p>
               <p className="text-sm text-muted-foreground">
-                Try another search or clear the filters.
+                Try a different name, phone number, or ID.
               </p>
             </div>
           )}
@@ -162,7 +248,7 @@ export function RecordsTable({
               size="icon-sm"
               aria-label="Previous page"
               disabled={currentPage === 1}
-              onClick={() => setPage(currentPage - 1)}
+              onClick={() => setPagination({ page: currentPage - 1, context })}
             >
               <ChevronLeft />
             </Button>
@@ -174,7 +260,7 @@ export function RecordsTable({
               size="icon-sm"
               aria-label="Next page"
               disabled={currentPage === pageCount}
-              onClick={() => setPage(currentPage + 1)}
+              onClick={() => setPagination({ page: currentPage + 1, context })}
             >
               <ChevronRight />
             </Button>
