@@ -1,68 +1,41 @@
 import type { ComponentProps } from "react"
-import { BarChart3, Map, ShieldCheck } from "lucide-react"
-import { Link, useLocation } from "react-router-dom"
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from "@/components/ui/sidebar"
+import { LiquiGlass } from "@liqui-design/glass"
+import { ShieldCheck } from "lucide-react"
+import { Link } from "react-router-dom"
+import { accountNavigation, mainNavigation } from "@/config/navigation"
+import { GlassNavigation } from "@/components/glass-navigation"
+import { Sidebar, useSidebar } from "@/components/ui/sidebar"
 
 export function AppSidebar(props: ComponentProps<typeof Sidebar>) {
   const { setOpenMobile } = useSidebar()
-  const { pathname, search } = useLocation()
-  const params = new URLSearchParams(search)
-  params.delete("incident")
-  const query = params.size ? "?" + params.toString() : ""
   return (
-    <Sidebar {...props}>
-      <SidebarHeader className="px-5 pt-6 pb-7">
+    <Sidebar {...props} mobileWidth="6rem" className="osy-sidebar">
+      <LiquiGlass
+        className="osy-rail"
+        contentClassName="osy-rail-content"
+        material="auto"
+        radius={36}
+        frost={0.5}
+        blur={12}
+        refraction={24}
+        bezel={16}
+        dispersion={0}
+        specular={0.3}
+      >
         <Link
           to="/statistics"
+          aria-label="osy home"
+          className="rail-brand"
           onClick={() => setOpenMobile(false)}
-          className="flex items-center gap-2.5 rounded-md p-1 focus-visible:outline-2 focus-visible:outline-ring"
         >
-          <span className="brand-mark">
-            <ShieldCheck className="size-6" />
-          </span>
-          <span className="text-base font-semibold tracking-tight">
-            RoadWatch
-          </span>
+          <ShieldCheck className="size-6" aria-hidden="true" />
         </Link>
-      </SidebarHeader>
-      <SidebarContent>
-        <SidebarGroup className="px-3">
-          <SidebarMenu className="gap-1">
-            {[
-              {
-                title: "Statistics overview",
-                url: "/statistics",
-                icon: BarChart3,
-              },
-              { title: "Accident map", url: "/map", icon: Map },
-            ].map((item) => (
-              <SidebarMenuItem key={item.url}>
-                <SidebarMenuButton
-                  isActive={pathname === item.url}
-                  render={
-                    <Link
-                      onClick={() => setOpenMobile(false)}
-                      to={item.url + query}
-                    />
-                  }
-                >
-                  <item.icon className="size-5" />
-                  <span>{item.title}</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        </SidebarGroup>
-      </SidebarContent>
+        <GlassNavigation
+          items={mainNavigation}
+          footerItems={accountNavigation}
+          onNavigate={() => setOpenMobile(false)}
+        />
+      </LiquiGlass>
     </Sidebar>
   )
 }

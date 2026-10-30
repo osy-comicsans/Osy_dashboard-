@@ -176,11 +176,26 @@ test("map styling, Gabarito and both appearances work", async ({ page }) => {
     "height",
     "44px"
   )
-  await page.getByRole("button", { name: "Switch to dark mode" }).click()
-  await expect(page.locator("html")).toHaveClass(/dark/)
-  await expect(page.locator(".leaflet-tile-pane")).toHaveCSS("filter", /invert/)
-  await page.getByRole("button", { name: "Switch to light mode" }).click()
-  await expect(page.locator("html")).toHaveClass(/light/)
+  for (const appearance of ["Dark", "Light"]) {
+    await page.getByRole("link", { name: "Settings", exact: true }).click()
+    await page.getByRole("radio", { name: appearance, exact: true }).check()
+    await page.getByRole("button", { name: "Save preferences" }).click()
+    await page.getByRole("link", { name: "Accident map", exact: true }).click()
+    await expect(page.locator("html")).toHaveClass(
+      new RegExp(appearance.toLowerCase())
+    )
+    if (appearance === "Dark") {
+      await expect(page.locator(".leaflet-tile-pane")).toHaveCSS(
+        "filter",
+        /invert/
+      )
+    } else {
+      await expect(page.locator(".leaflet-tile-pane")).not.toHaveCSS(
+        "filter",
+        /invert/
+      )
+    }
+  }
   await page
     .getByRole("link", { name: "Statistics overview", exact: true })
     .click()

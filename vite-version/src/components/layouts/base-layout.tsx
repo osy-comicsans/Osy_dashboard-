@@ -11,12 +11,12 @@ export function BaseLayout() {
     <SidebarProvider
       style={
         {
-          "--sidebar-width": "15rem",
+          "--sidebar-width": "6rem",
           "--header-height": "4rem",
         } as CSSProperties
       }
     >
-      <AppSidebar variant="sidebar" />
+      <AppSidebar variant="floating" />
       <SidebarInset className="min-w-0">
         <SiteHeader />
         <div className="@container/main flex flex-1 flex-col gap-6 p-4 md:px-6 md:py-8 lg:px-8">
