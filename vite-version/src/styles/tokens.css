@@ -1,0 +1,138 @@
+/* Shared design tokens from docs/design.md. Dark is the default appearance. */
+:root {
+  color-scheme: dark;
+  --color-void: #0d0d0b;
+  --color-deep: #0d0d16;
+  --color-glass-fill: rgba(168, 180, 233, 0.04);
+  --color-glass-rim: rgba(237, 237, 237, 0.3);
+  --color-text-primary: #f5f2fa;
+  --color-text-secondary: #8484c8;
+  --color-text-tertiary: #5c5c66;
+  --color-text-accent: #e79bff;
+  --color-aqua: #2bdeed;
+  --color-azure: #4f8bff;
+  --color-violet: #8b5cf8;
+  --color-orchid: #c84bff;
+  --color-rose: #ff6fa5;
+  --color-success: var(--status-success);
+  --color-warning: var(--status-warning);
+  --color-danger: var(--status-danger);
+  --gradient-aqua: linear-gradient(
+    135deg,
+    var(--color-aqua),
+    var(--color-azure)
+  );
+  --gradient-aurora: linear-gradient(135deg, #a8c7ff, #944df0, #fd508f);
+  --gradient-sweep: linear-gradient(
+    135deg,
+    var(--color-aqua),
+    var(--color-violet),
+    var(--color-orchid),
+    var(--color-rose)
+  );
+  --font-family:
+    "Plus Jakarta Sans Variable", "Plus Jakarta Sans", system-ui, sans-serif;
+  --shape-xs: 10px;
+  --shape-sm: 14px;
+  --shape-md: 20px;
+  --shape-lg: 28px;
+  --shape-pill: 9999px;
+  --space-xxs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 20px;
+  --space-xl: 24px;
+  --space-xxl: 32px;
+  --space-3xl: 40px;
+  --space-4xl: 56px;
+  --button-height: 52px;
+  --glass-blur: 24px;
+  --surface-elevated: rgba(26, 26, 43, 0.74);
+  --surface-overlay: rgba(18, 18, 31, 0.92);
+  --surface-control: rgba(168, 180, 233, 0.035);
+  --surface-hover: rgba(168, 180, 233, 0.08);
+  --surface-sheen: rgba(237, 237, 237, 0.12);
+  --ambient-aqua: color-mix(in srgb, var(--color-aqua) 6%, transparent);
+  --ambient-violet: color-mix(in srgb, var(--color-violet) 10%, transparent);
+  --ambient-rose: color-mix(in srgb, var(--color-rose) 4%, transparent);
+  --background: var(--color-void);
+  --foreground: var(--color-text-primary);
+  --card: var(--color-glass-fill);
+  --card-foreground: var(--foreground);
+  --popover: var(--surface-overlay);
+  --popover-foreground: var(--foreground);
+  --primary: var(--color-aqua);
+  --primary-foreground: var(--color-deep);
+  --secondary: var(--surface-hover);
+  --secondary-foreground: var(--foreground);
+  --muted: var(--color-glass-fill);
+  --muted-foreground: var(--color-text-secondary);
+  --accent: color-mix(in srgb, var(--color-aqua) 9%, transparent);
+  --accent-foreground: var(--foreground);
+  --destructive: var(--color-danger);
+  --success: var(--status-success);
+  --success-foreground: var(--color-deep);
+  --warning: var(--status-warning);
+  --warning-foreground: var(--color-deep);
+  --info: var(--color-azure);
+  --info-foreground: var(--color-deep);
+  --border: rgba(168, 180, 233, 0.12);
+  --input: rgba(237, 237, 237, 0.16);
+  --ring: var(--color-aqua);
+  --chart-1: var(--color-aqua);
+  --chart-2: var(--color-violet);
+  --chart-3: var(--color-orchid);
+  --chart-4: var(--color-rose);
+  --chart-5: var(--color-azure);
+  --status-success: #34d399;
+  --status-warning: #ffcd57;
+  --status-danger: #ff5c5c;
+  --sidebar: var(--surface-elevated);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--surface-hover);
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
+  --map-background: var(--color-deep);
+  --map-tile-filter: invert(1) hue-rotate(180deg) saturate(0.35)
+    brightness(0.78) contrast(0.92);
+  --map-pin-fill: rgba(13, 13, 22, 0.9);
+  --shadow-glass:
+    0 12px 40px rgba(0, 0, 0, 0.12), inset 0 1px 0 var(--surface-sheen);
+}
+
+/* Optional light appearance retains the same materials and geometry. */
+.light {
+  color-scheme: light;
+  --background: #f4f5fc;
+  --foreground: #242439;
+  --card-foreground: var(--foreground);
+  --color-glass-fill: rgba(255, 255, 255, 0.58);
+  --color-glass-rim: rgba(255, 255, 255, 0.9);
+  --color-text-secondary: #61618e;
+  --color-text-tertiary: #777788;
+  --color-text-accent: #8750ac;
+  --surface-elevated: rgba(255, 255, 255, 0.68);
+  --surface-overlay: rgba(250, 250, 255, 0.94);
+  --surface-control: rgba(255, 255, 255, 0.42);
+  --surface-hover: rgba(79, 139, 255, 0.07);
+  --surface-sheen: rgba(255, 255, 255, 0.8);
+  --primary: #126e8b;
+  --muted-foreground: var(--color-text-secondary);
+  --border: rgba(76, 76, 135, 0.14);
+  --input: rgba(76, 76, 135, 0.2);
+  --ring: #157fa0;
+  --chart-1: #168ca6;
+  --chart-2: #8051d2;
+  --status-success: #137b59;
+  --status-warning: #946a09;
+  --status-danger: #c43e4c;
+  --map-background: #e7e9ef;
+  --map-tile-filter: saturate(0.45) contrast(0.94);
+  --map-pin-fill: rgba(250, 250, 255, 0.94);
+  --shadow-glass:
+    0 12px 40px rgba(50, 50, 100, 0.035), inset 0 1px 0 var(--surface-sheen);
+}
