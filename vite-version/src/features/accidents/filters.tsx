@@ -32,7 +32,7 @@ export function AccidentFilters() {
     active,
   } = useAccidents()
   return (
-    <section aria-label="Accident filters" className="glass-panel p-4 md:p-5">
+    <section aria-label="Accident filters" className="surface-panel p-4 md:p-5">
       <div className="mb-4 flex items-center gap-2 text-sm font-medium">
         <SlidersHorizontal className="size-4 text-primary" />
         Filter reports

@@ -18,12 +18,11 @@
   width: 44px;
   height: 44px;
   border: 1px solid var(--input);
-  border-radius: var(--shape-pill);
+  border-radius: var(--shape-sm);
   background: var(--surface-overlay);
   color: var(--foreground);
   line-height: 42px;
-  box-shadow: var(--shadow-glass);
-  backdrop-filter: blur(var(--glass-blur));
+  box-shadow: none;
   font-family: var(--font-family);
   font-size: 22px;
   font-weight: 400;
@@ -34,7 +33,7 @@
 }
 .roadwatch-map .leaflet-control-zoom a:first-child,
 .roadwatch-map .leaflet-control-zoom a:last-child {
-  border-radius: var(--shape-pill);
+  border-radius: var(--shape-sm);
 }
 .roadwatch-map .leaflet-control-zoom a:focus-visible {
   outline: 2px solid var(--ring);
@@ -50,18 +49,16 @@
   background: var(--surface-overlay);
   color: var(--muted-foreground);
   font-size: 10px;
-  backdrop-filter: blur(var(--glass-blur));
 }
 .roadwatch-map .leaflet-control-attribution a {
   color: var(--primary);
 }
 .roadwatch-map .leaflet-popup-content-wrapper {
-  border: 1px solid var(--color-glass-rim);
+  border: 1px solid var(--border);
   border-radius: var(--shape-md);
   background: var(--surface-overlay);
   color: var(--foreground);
-  box-shadow: var(--shadow-glass);
-  backdrop-filter: blur(var(--glass-blur));
+  box-shadow: none;
 }
 .roadwatch-map .leaflet-popup-tip {
   background: var(--surface-overlay);
@@ -73,7 +70,7 @@
   top: 4px;
   right: 4px;
   color: var(--muted-foreground);
-  border-radius: var(--shape-pill);
+  border-radius: var(--shape-sm);
 }
 .roadwatch-map .leaflet-popup-close-button:hover {
   color: var(--primary);
@@ -101,14 +98,11 @@
   align-items: center;
   justify-content: center;
   border: 1.5px solid var(--marker-color);
-  border-radius: 13px 13px 13px 4px;
+  border-radius: 10px 10px 10px 3px;
   background: var(--map-pin-fill);
   color: var(--marker-color);
-  box-shadow:
-    0 0 10px color-mix(in srgb, var(--marker-color) 8%, transparent),
-    inset 0 1px 0 var(--surface-sheen);
+  box-shadow: none;
   transform: rotate(-45deg);
-  backdrop-filter: blur(12px);
 }
 .accident-marker svg {
   width: 22px;
@@ -116,14 +110,14 @@
   transform: rotate(45deg);
 }
 .accident-marker.is-selected .marker-pin {
-  outline: 2px solid var(--color-aqua);
+  outline: 2px solid var(--primary);
   outline-offset: 4px;
-  box-shadow: 0 0 20px color-mix(in srgb, var(--color-aqua) 22%, transparent);
+  box-shadow: none;
 }
 .accident-marker:focus-visible {
   outline: 2px solid var(--ring);
   outline-offset: 8px;
-  border-radius: var(--shape-pill);
+  border-radius: var(--shape-sm);
 }
 .map-legend,
 .map-notice {
@@ -131,18 +125,16 @@
   border-radius: var(--shape-sm);
   background: var(--surface-overlay);
   color: var(--foreground);
-  backdrop-filter: blur(var(--glass-blur));
-  box-shadow: var(--shadow-glass);
+  box-shadow: none;
 }
 .map-legend {
   padding: var(--space-sm) var(--space-md);
 }
 .map-area-label {
   border: 1px solid var(--input);
-  border-radius: var(--shape-pill);
+  border-radius: var(--shape-sm);
   background: var(--surface-overlay);
   padding: var(--space-xs) var(--space-sm);
   font-size: 10px;
   color: var(--muted-foreground);
-  backdrop-filter: blur(var(--glass-blur));
 }

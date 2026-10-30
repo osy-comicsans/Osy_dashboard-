@@ -1,12 +1,10 @@
 import type { ComponentProps } from "react"
-import { BarChart3, Map, ShieldCheck, FlaskConical } from "lucide-react"
+import { BarChart3, Map, ShieldCheck } from "lucide-react"
 import { Link, useLocation } from "react-router-dom"
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -17,31 +15,27 @@ import {
 export function AppSidebar(props: ComponentProps<typeof Sidebar>) {
   const { setOpenMobile } = useSidebar()
   const { pathname, search } = useLocation()
-  const navigationSearch = new URLSearchParams(search)
-  navigationSearch.delete("incident")
-  const query = navigationSearch.toString()
+  const params = new URLSearchParams(search)
+  params.delete("incident")
+  const query = params.size ? "?" + params.toString() : ""
   return (
     <Sidebar {...props}>
-      <SidebarHeader className="p-5 pb-8">
+      <SidebarHeader className="px-5 pt-6 pb-7">
         <Link
           to="/statistics"
           onClick={() => setOpenMobile(false)}
-          className="flex items-center gap-3 rounded-lg p-1 focus-visible:outline-2 focus-visible:outline-ring"
+          className="flex items-center gap-2.5 rounded-md p-1 focus-visible:outline-2 focus-visible:outline-ring"
         >
-          <div className="brand-mark">
+          <span className="brand-mark">
             <ShieldCheck className="size-6" />
-          </div>
-          <div>
-            <div className="text-lg font-semibold tracking-tight">
-              RoadWatch.
-            </div>
-            <p className="text-xs text-muted-foreground">Accident monitoring</p>
-          </div>
+          </span>
+          <span className="text-base font-semibold tracking-tight">
+            RoadWatch
+          </span>
         </Link>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>WORKSPACE</SidebarGroupLabel>
+        <SidebarGroup className="px-3">
           <SidebarMenu className="gap-1">
             {[
               {
@@ -53,12 +47,11 @@ export function AppSidebar(props: ComponentProps<typeof Sidebar>) {
             ].map((item) => (
               <SidebarMenuItem key={item.url}>
                 <SidebarMenuButton
-                  className="h-13"
                   isActive={pathname === item.url}
                   render={
                     <Link
                       onClick={() => setOpenMobile(false)}
-                      to={item.url + (query ? "?" + query : "")}
+                      to={item.url + query}
                     />
                   }
                 >
@@ -69,26 +62,7 @@ export function AppSidebar(props: ComponentProps<typeof Sidebar>) {
             ))}
           </SidebarMenu>
         </SidebarGroup>
-        <div className="glass-panel mx-4 mt-auto p-4">
-          <FlaskConical className="mb-3 size-5 text-primary" />
-          <p className="text-sm font-medium">A clearer view of road safety</p>
-          <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-            Explore accident reports, identify affected areas, and understand
-            how alerts are received.
-          </p>
-        </div>
       </SidebarContent>
-      <SidebarFooter className="p-4">
-        <div className="flex items-center gap-3 rounded-lg border-t pt-4">
-          <div className="workspace-avatar flex size-10 items-center justify-center text-xs font-semibold">
-            RW
-          </div>
-          <div>
-            <p className="text-sm font-medium">Road safety workspace</p>
-            <p className="text-xs text-muted-foreground">Demo environment</p>
-          </div>
-        </div>
-      </SidebarFooter>
     </Sidebar>
   )
 }

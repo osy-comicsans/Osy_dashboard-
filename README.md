@@ -2,8 +2,8 @@
 
 Accident statistics and area monitoring for Algeria.
 
-The interface follows [the design system](docs/design.md), with shared tokens in
-`vite-version/src/styles/tokens.css` and map styles in
+The interface uses solid neutral surfaces and a restrained aqua accent. Shared
+tokens live in `vite-version/src/styles/tokens.css`, with map styles in
 `vite-version/src/styles/leaflet-theme.css`.
 
 ## Run locally

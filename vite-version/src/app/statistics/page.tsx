@@ -1,4 +1,3 @@
-import type { CSSProperties } from "react"
 import {
   CarFront,
   Download,
@@ -27,28 +26,24 @@ export default function StatisticsPage() {
       text: active
         ? "Reports matching your filters"
         : "Reported across 8 Algerian areas",
-      color: "var(--primary)",
     },
     {
       label: "App reports",
       value: records.filter((a) => a.source === "app").length,
       icon: Smartphone,
       text: "Reports from drivers using the app",
-      color: "var(--color-text-accent)",
     },
     {
       label: "Online alerts",
       value: records.filter((a) => a.channel === "online").length,
       icon: Wifi,
       text: "Alerts received with connectivity",
-      color: "var(--status-success)",
     },
     {
       label: "Offline alerts",
       value: records.filter((a) => a.channel === "offline").length,
       icon: WifiOff,
       text: "Alerts recorded without connectivity",
-      color: "var(--color-violet)",
     },
   ]
   return (
@@ -82,11 +77,7 @@ export default function StatisticsPage() {
       <AccidentFilters />
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {metrics.map((metric) => (
-          <Card
-            key={metric.label}
-            className="metric-card"
-            style={{ "--metric-color": metric.color } as CSSProperties}
-          >
+          <Card key={metric.label} className="metric-card">
             <CardHeader>
               <div className="flex items-center justify-between gap-2">
                 <span className="text-xs text-muted-foreground">
