@@ -1,17 +1,39 @@
 import * as React from "react"
 import { cn } from "cn"
+import { LiquiGlass } from "@liqui-design/glass"
 
+/* Glass card. data-slot/data-glass are what the CSS hooks into,
+   and data-size makes the `sm` variants actually work. */
 function Card({
   className,
   size = "default",
   ...props
-}: React.ComponentProps<"div"> & { size?: "default" | "sm" }) {
+}: React.ComponentProps<typeof LiquiGlass> & { size?: "default" | "sm" }) {
   return (
-    <div
+    <LiquiGlass
       data-slot="card"
+      data-glass
       data-size={size}
       className={cn(
-        "group/card flex flex-col gap-(--card-spacing) overflow-hidden rounded-xl bg-card py-(--card-spacing) text-sm text-card-foreground [--card-spacing:--spacing(6)] has-[>[data-slot=card-footer]]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(3)] data-[size=sm]:has-[>[data-slot=card-footer]]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl",
+        "group/card flex flex-col gap-(--card-spacing)",
+        "overflow-hidden rounded-xl",
+        "py-(--card-spacing) text-sm text-card-foreground",
+        "[--card-spacing:--spacing(6)]",
+        "data-[size=sm]:[--card-spacing:--spacing(3)]",
+        className
+      )}
+      {...props}
+    />
+  )
+}
+
+/* Solid, non-glass surface. Use for tables, charts, anything
+   that should NOT look like glass. */
+function Panel({ className, ...props }: React.ComponentProps<"section">) {
+  return (
+    <section
+      className={cn(
+        "surface-panel flex flex-col gap-(--card-spacing) overflow-hidden rounded-xl py-(--card-spacing) text-sm text-card-foreground [--card-spacing:--spacing(6)]",
         className
       )}
       {...props}
@@ -78,12 +100,13 @@ function CardContent({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+/* Transparent footer with a faint divider, so the glass reads as one surface. */
 function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="card-footer"
       className={cn(
-        "flex items-center rounded-b-xl border-t bg-muted/50 p-(--card-spacing)",
+        "flex items-center rounded-b-xl border-t border-[var(--lq-rim-lo)] bg-transparent p-(--card-spacing)",
         className
       )}
       {...props}
@@ -93,6 +116,7 @@ function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
 
 export {
   Card,
+  Panel,
   CardHeader,
   CardFooter,
   CardTitle,

@@ -11,7 +11,6 @@ import {
   YAxis,
 } from "recharts"
 import {
-  Card,
   CardContent,
   CardDescription,
   CardHeader,
@@ -60,7 +59,7 @@ export function AccidentCharts({
   ]
   return (
     <div className="grid min-w-0 gap-6 lg:grid-cols-[1.8fr_1fr]">
-      <Card className="min-w-0">
+      <div className="min-w-0">
         <CardHeader>
           <CardTitle>Accident trends</CardTitle>
           <CardDescription>
@@ -132,8 +131,8 @@ export function AccidentCharts({
             </ResponsiveContainer>
           </div>
         </CardContent>
-      </Card>
-      <Card className="min-w-0">
+      </div>
+      <div className="min-w-0">
         <CardHeader>
           <CardTitle>Alert breakdown</CardTitle>
           <CardDescription>How accident alerts were received</CardDescription>
@@ -195,7 +194,7 @@ export function AccidentCharts({
             ))}
           </div>
         </CardContent>
-      </Card>
+      </div>
     </div>
   )
 }

@@ -97,7 +97,18 @@ export default function StatisticsPage() {
       </div>
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {metrics.map((metric) => (
-          <Card key={metric.label} className="metric-card">
+          <Card
+            key={metric.label}
+            className="metric-card py-0"
+            contentClassName="flex min-w-0 flex-col py-(--card-spacing)"
+            material="auto"
+            frost={0.6}
+            blur={2}
+            refraction={56}
+            bezel={14}
+            specular={0.25}
+            dispersion={0}
+          >
             <CardHeader>
               <div className="flex items-center justify-between gap-2">
                 <span className="text-xs text-muted-foreground">

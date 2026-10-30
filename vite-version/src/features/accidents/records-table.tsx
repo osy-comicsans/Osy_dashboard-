@@ -14,7 +14,6 @@ import {
 import { Link } from "react-router-dom"
 import { Button, buttonVariants } from "@/components/ui/button"
 import {
-  Card,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -64,7 +63,7 @@ export function RecordsTable({
   const start = (currentPage - 1) * 8
   return (
     <>
-      <Card className="min-w-0 pb-0">
+      <section className="min-w-0 pb-0">
         <CardHeader>
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
@@ -266,7 +265,7 @@ export function RecordsTable({
             </Button>
           </div>
         </div>
-      </Card>
+      </section>
       <RecordDetails
         record={selected}
         onClose={() => setSelected(null)}

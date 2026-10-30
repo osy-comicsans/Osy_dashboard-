@@ -13,5 +13,8 @@ export default defineConfig({
   },
   define: {
     'import.meta.env.VITE_BASENAME': JSON.stringify(process.env.VITE_BASENAME || ''),
+  },
+  server: {
+    allowedHosts: ['ff5b-105-235-132-77.ngrok-free.app', 'localhost']
   }
 })
