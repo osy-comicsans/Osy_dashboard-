@@ -1,4 +1,4 @@
-/* OSY palette and geometry, adapted from docs/design.md for RoadWatch. */
+/* osy palette and geometry, adapted from docs/design.md. */
 :root {
   color-scheme: light;
   --purple-100: #ece0ff;

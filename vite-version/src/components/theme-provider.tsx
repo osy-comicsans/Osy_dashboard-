@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { ThemeProviderContext } from "@/contexts/theme-context"
+import { readLocalValue } from "@/lib/local-storage"
 
 type Theme = "dark" | "light" | "system"
 
@@ -14,11 +15,11 @@ type ThemeProviderProps = {
 export function ThemeProvider({
   children,
   defaultTheme = "system",
-  storageKey = "roadwatch-theme",
+  storageKey = "osy-theme",
   ...props
 }: ThemeProviderProps) {
   const [theme, setTheme] = React.useState<Theme>(
-    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
+    () => (readLocalValue(storageKey) as Theme) || defaultTheme
   )
 
   React.useEffect(() => {

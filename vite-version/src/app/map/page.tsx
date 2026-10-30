@@ -3,7 +3,7 @@ import { BarChart3, Eye, MapPin, SearchX } from "lucide-react"
 import { Link, useSearchParams } from "react-router-dom"
 import { Button, buttonVariants } from "@/components/ui/button"
 import {
-  Card,
+  Panel,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -61,7 +61,7 @@ export default function MapPage() {
       </div>
       <AccidentFilters />
       <div className="grid min-w-0 gap-6 xl:grid-cols-[minmax(0,1fr)_330px]">
-        <Card className="min-w-0 gap-0 pb-0">
+        <Panel className="min-w-0 gap-0 pb-0">
           <CardHeader className="border-b pb-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div>
@@ -85,8 +85,8 @@ export default function MapPage() {
             selectedId={selected?.id ?? null}
             onSelect={select}
           />
-        </Card>
-        <Card className="min-w-0 gap-0 pb-0">
+        </Panel>
+        <Panel className="min-w-0 gap-0 pb-0">
           <CardHeader className="border-b pb-4">
             <CardTitle>
               Matching reports{" "}
@@ -157,7 +157,7 @@ export default function MapPage() {
               </div>
             )}
           </div>
-        </Card>
+        </Panel>
       </div>
       <p className="text-xs text-muted-foreground">
         Sample data for Algeria · October 2026. Markers show fictional accident

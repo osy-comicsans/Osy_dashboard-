@@ -79,7 +79,7 @@ test("statistics headers sort every report and exports follow the selected order
   const downloadEvent = page.waitForEvent("download")
   await page.getByRole("button", { name: "Export reports" }).click()
   const download = await downloadEvent
-  expect(download.suggestedFilename()).toBe("roadwatch-accidents.csv")
+  expect(download.suggestedFilename()).toBe("osy-accidents.csv")
   const stream = await download.createReadStream()
   let csv = ""
   for await (const chunk of stream!) csv += chunk.toString()

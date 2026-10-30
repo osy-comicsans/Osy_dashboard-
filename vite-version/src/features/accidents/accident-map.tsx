@@ -131,7 +131,7 @@ export function AccidentMap({
     <div className="relative isolate h-[480px] min-w-0 overflow-hidden rounded-b-xl md:h-[640px]">
       <div
         ref={container}
-        className="roadwatch-map h-full w-full"
+        className="osy-map h-full w-full"
         role="region"
         aria-label="Interactive accident map of Algeria"
         data-testid="accident-map"

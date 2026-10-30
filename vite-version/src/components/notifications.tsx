@@ -4,13 +4,14 @@ import { Link } from "react-router-dom"
 import { Popover } from "@base-ui/react/popover"
 import { Button } from "@/components/ui/button"
 import { accidents, dateLabel } from "@/features/accidents/data"
+import { readLocalValue } from "@/lib/local-storage"
 
 const alerts = accidents.filter((record) => record.status === "New")
-const storageKey = "roadwatch-read-notifications"
+const storageKey = "osy-read-notifications"
 
 function readNotifications(): string[] {
   try {
-    const stored: unknown = JSON.parse(localStorage.getItem(storageKey) || "[]")
+    const stored: unknown = JSON.parse(readLocalValue(storageKey) || "[]")
     return Array.isArray(stored)
       ? stored.filter((id): id is string => typeof id === "string")
       : []

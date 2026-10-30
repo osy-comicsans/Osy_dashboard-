@@ -40,7 +40,7 @@ export function exportAccidents(records: Accident[]) {
   )
   const link = document.createElement("a")
   link.href = url
-  link.download = "roadwatch-accidents.csv"
+  link.download = "osy-accidents.csv"
   link.click()
   setTimeout(() => URL.revokeObjectURL(url), 1000)
 }

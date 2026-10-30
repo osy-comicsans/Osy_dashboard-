@@ -1,4 +1,5 @@
 import type { ComponentProps } from "react"
+import { LiquiGlass } from "@liqui-design/glass"
 import { Search, SlidersHorizontal, X } from "lucide-react"
 import { areas } from "./data"
 import { useAccidents } from "./use-accidents"
@@ -32,7 +33,20 @@ export function AccidentFilters() {
     active,
   } = useAccidents()
   return (
-    <section aria-label="Accident filters" className="surface-panel p-4 md:p-5">
+    <LiquiGlass
+      role="region"
+      aria-label="Accident filters"
+      className="map-filter-glass"
+      contentClassName="p-4 md:p-5"
+      material="auto"
+      radius={16}
+      frost={0.6}
+      blur={8}
+      refraction={24}
+      bezel={14}
+      specular={0.25}
+      dispersion={0}
+    >
       <div className="mb-4 flex items-center gap-2 text-sm font-medium">
         <SlidersHorizontal className="size-4 text-primary" />
         Filter reports
@@ -109,6 +123,6 @@ export function AccidentFilters() {
           Clear filters
         </Button>
       )}
-    </section>
+    </LiquiGlass>
   )
 }

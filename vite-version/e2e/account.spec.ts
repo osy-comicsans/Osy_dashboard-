@@ -1,5 +1,76 @@
 import { test, expect } from "@playwright/test"
 
+test("osy branding preserves settings and profiles saved under the previous name", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    if (localStorage.getItem("rename-test-seeded")) return
+    localStorage.setItem("rename-test-seeded", "true")
+    localStorage.setItem("roadwatch-theme", "dark")
+    localStorage.setItem(
+      "roadwatch-preferences",
+      JSON.stringify({ startPage: "/users", density: "compact" })
+    )
+    localStorage.setItem(
+      "roadwatch-profile",
+      JSON.stringify({
+        name: "Lina Boudiaf",
+        email: "lina@example.com",
+        phone: "+213 555 123 456",
+        area: "Oran",
+      })
+    )
+    localStorage.setItem(
+      "roadwatch-read-notifications",
+      JSON.stringify(
+        Array.from(
+          { length: 5 },
+          (_, i) => "ACC-2026-" + String(i + 1).padStart(3, "0")
+        )
+      )
+    )
+  })
+  await page.goto("/")
+  await expect(page).toHaveURL(/\/users$/)
+  await expect(page).toHaveTitle("osy | Accident monitoring")
+  await expect(page.locator("html")).toHaveClass(/dark/)
+  await expect(page.locator(".users-table")).toHaveAttribute(
+    "data-density",
+    "compact"
+  )
+  await expect(page.locator('link[rel="icon"]')).toHaveAttribute(
+    "href",
+    "/osy.svg"
+  )
+  expect((await page.request.get("/osy.svg")).ok()).toBe(true)
+  await expect(
+    page.getByRole("button", { name: "Notifications", exact: true })
+  ).toBeVisible()
+  await page.goto("/profile")
+  await expect(page.getByLabel("Full name", { exact: true })).toHaveValue(
+    "Lina Boudiaf"
+  )
+  await expect(page.getByLabel("Area", { exact: true })).toHaveValue("Oran")
+  expect(
+    await page.evaluate(() =>
+      ["theme", "preferences", "profile", "read-notifications"].every(
+        (key) =>
+          localStorage.getItem("osy-" + key) !== null &&
+          localStorage.getItem("roadwatch-" + key) === null
+      )
+    )
+  ).toBe(true)
+  await page.evaluate(() => {
+    const profile = JSON.parse(localStorage.getItem("osy-profile")!)
+    profile.name = "RoadWatch Admin"
+    localStorage.setItem("osy-profile", JSON.stringify(profile))
+  })
+  await page.reload()
+  await expect(page.getByLabel("Full name", { exact: true })).toHaveValue(
+    "osy Admin"
+  )
+})
+
 test("users navigation, search, sorting and report details", async ({
   page,
 }) => {

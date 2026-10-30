@@ -1,4 +1,4 @@
-# RoadWatch
+# osy
 
 Accident statistics and area monitoring for Algeria.
 
@@ -26,6 +26,9 @@ Open [localhost:5173](http://localhost:5173).
   records, report details, and CSV export.
 - **Accident map** (`/map`): Leaflet map with severity markers and selectable
   accident locations.
+- **Users** (`/users`): searchable driver directory and linked report details.
+- **Profile** (`/profile`): editable contact details saved in this browser.
+- **Settings** (`/settings`): appearance, start page, and users-table spacing.
 
 Statistics has one search field directly above the report table. Click a column
 heading to toggle alphabetical, numeric, date, or category order across all
@@ -61,7 +64,7 @@ The browser tests start a development server if needed.
 
 ## Project files
 
-- `vite-version/src/app/`: statistics and map pages.
+- `vite-version/src/app/`: statistics, map, users, profile, and settings pages.
 - `vite-version/src/features/accidents/`: shared accident data and UI.
 - `vite-version/src/components/`: dashboard layout and UI components.
 - `vite-version/e2e/`: browser tests.

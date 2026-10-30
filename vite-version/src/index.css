@@ -797,7 +797,20 @@ body::before {
   background: transparent;
 }
 
-/* Account pages use the existing solid surfaces; glass stays on the metrics. */
+.map-filter-glass {
+  --lq-text: var(--foreground);
+  --lq-text-dim: var(--color-text-secondary);
+  --lq-tint: color-mix(in srgb, var(--floating-fill) 75%, var(--popover));
+  --lq-tint-deep: color-mix(in srgb, var(--floating-fill) 90%, transparent);
+  --lq-rim-hi: color-mix(in srgb, var(--floating-fill) 90%, transparent);
+  --lq-rim-lo: color-mix(in srgb, var(--foreground) 8%, transparent);
+  --surface-control: color-mix(in srgb, var(--floating-fill) 75%, transparent);
+  min-width: 0;
+  color: var(--foreground);
+  box-shadow: var(--shadow-xs);
+}
+
+/* Account pages use the existing solid surfaces. */
 .account-field {
   display: flex;
   min-width: 0;

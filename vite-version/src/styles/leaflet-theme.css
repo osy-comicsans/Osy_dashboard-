@@ -1,12 +1,12 @@
 /* Keep the tile treatment separate from markers, labels in popups, and controls. */
-.roadwatch-map {
+.osy-map {
   background: var(--map-background);
   font-family: var(--font-family);
 }
-.roadwatch-map .leaflet-tile-pane {
+.osy-map .leaflet-tile-pane {
   filter: var(--map-tile-filter);
 }
-.roadwatch-map .leaflet-control-zoom {
+.osy-map .leaflet-control-zoom {
   display: grid;
   gap: var(--space-xs);
   margin: var(--space-md);
@@ -14,7 +14,7 @@
   box-shadow: none;
   background: none;
 }
-.roadwatch-map .leaflet-control-zoom a {
+.osy-map .leaflet-control-zoom a {
   width: 44px;
   height: 44px;
   border: 1px solid var(--input);
@@ -27,22 +27,22 @@
   font-size: 22px;
   font-weight: 400;
 }
-.roadwatch-map .leaflet-control-zoom a:hover {
+.osy-map .leaflet-control-zoom a:hover {
   background: var(--surface-elevated);
   color: var(--primary);
 }
-.roadwatch-map .leaflet-control-zoom a:first-child,
-.roadwatch-map .leaflet-control-zoom a:last-child {
+.osy-map .leaflet-control-zoom a:first-child,
+.osy-map .leaflet-control-zoom a:last-child {
   border-radius: var(--shape-sm);
 }
-.roadwatch-map .leaflet-control-zoom a:focus-visible {
+.osy-map .leaflet-control-zoom a:focus-visible {
   outline: 2px solid var(--ring);
   outline-offset: 3px;
 }
-.roadwatch-map .leaflet-control-zoom a.leaflet-disabled {
+.osy-map .leaflet-control-zoom a.leaflet-disabled {
   opacity: 0.4;
 }
-.roadwatch-map .leaflet-control-attribution {
+.osy-map .leaflet-control-attribution {
   max-width: calc(100% - 8px);
   padding: 4px 8px;
   border-radius: var(--shape-xs) 0 0 0;
@@ -50,29 +50,29 @@
   color: var(--muted-foreground);
   font-size: 10px;
 }
-.roadwatch-map .leaflet-control-attribution a {
+.osy-map .leaflet-control-attribution a {
   color: var(--primary);
 }
-.roadwatch-map .leaflet-popup-content-wrapper {
+.osy-map .leaflet-popup-content-wrapper {
   border: 1px solid var(--border);
   border-radius: var(--shape-md);
   background: var(--surface-overlay);
   color: var(--foreground);
   box-shadow: none;
 }
-.roadwatch-map .leaflet-popup-tip {
+.osy-map .leaflet-popup-tip {
   background: var(--surface-overlay);
 }
-.roadwatch-map .leaflet-popup-content {
+.osy-map .leaflet-popup-content {
   margin: var(--space-md) var(--space-lg);
 }
-.roadwatch-map .leaflet-popup-close-button {
+.osy-map .leaflet-popup-close-button {
   top: 4px;
   right: 4px;
   color: var(--muted-foreground);
   border-radius: var(--shape-sm);
 }
-.roadwatch-map .leaflet-popup-close-button:hover {
+.osy-map .leaflet-popup-close-button:hover {
   color: var(--primary);
 }
 .accident-popup {
@@ -123,10 +123,9 @@
 .map-notice {
   border: 1px solid var(--border);
   border-radius: var(--shape-sm);
-  background: var(--floating-fill);
+  background: var(--surface-overlay);
   color: var(--foreground);
-  backdrop-filter: blur(8px);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-xs);
 }
 .map-legend {
   padding: var(--space-sm) var(--space-md);
